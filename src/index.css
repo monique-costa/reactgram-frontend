@@ -35,12 +35,12 @@ label {
 
 label span {
   font-weight: bold;
-  margin-bottom: 5em;
+  margin-bottom: .5em;
   color: #aaa;
   font-size: .7em;
 }
 
-input {
+input, textarea {
   background-color: #3b3b3b;
   color: #aaa;
   border: 1px solid #555;
