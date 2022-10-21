@@ -35,6 +35,15 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const getUserDetails = createAsyncThunk(
+  "user/get",
+  async(id, thunkAPI) => {
+    const data = await userService.getUserDetails(id);
+
+    return data;
+  }
+)
+
 export const userSlice = createSlice({
     name: "user",
     initialState,
@@ -44,28 +53,36 @@ export const userSlice = createSlice({
       },
     },
     extraReducers: (builder) => {
-        builder.addCase(profile.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        }).addCase(profile.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-            state.error = null;
-            state.user = action.payload;
-        }).addCase(updateProfile.pending, (state) => {
-          state.loading = true;
-          state.error = null;
+      builder.addCase(profile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      }).addCase(profile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.user = action.payload;
+      }).addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       }).addCase(updateProfile.fulfilled, (state, action) => {
-          state.loading = false;
-          state.success = true;
-          state.error = null;
-          state.user = action.payload;
-          state.message = "Usuário atualizado com sucesso."
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.user = action.payload;
+        state.message = "Usuário atualizado com sucesso."
       }).addCase(updateProfile.rejected, (state, action) => {
-          state.loading = false;
-          state.error = action.payload;
-          state.user = null;
-      });
+        state.loading = false;
+        state.error = action.payload;
+        state.user = null;
+      }).addCase(getUserDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      }).addCase(getUserDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.user = action.payload;
+    });
     }
 });
 
