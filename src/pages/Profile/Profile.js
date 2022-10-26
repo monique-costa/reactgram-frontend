@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 // redux
 import { getUserDetails, profile } from '../../slices/userSlice';
 import { addListener } from '@reduxjs/toolkit';
+import { publishPhoto, resetMessage } from '../../slices/photoSlice';
 
 const Profile = () => {
 
@@ -24,6 +25,10 @@ const Profile = () => {
 
   const {user, loading} = useSelector((state) => state.user);
   const {user: userAuth} = useSelector((state) => state.auth);
+  const {photos, loading: loadingPhoto, message: messagePhoto, error: errorPhoto} = useSelector((state) => state.photo);
+
+  const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
 
   // refs
   const newPhotoForm = useRef();
@@ -35,11 +40,34 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  }
+
+    const photoData = {
+      title,
+      image
+    };
+
+    const formData = new FormData();
+    Object.keys(photoData).forEach((key) => formData.append(key, photoData[key]));
+    formData.append("photo", formData);
+
+    dispatch(publishPhoto(formData));
+
+    setTitle("");
+
+    setTimeout(() => {
+      dispatch(resetMessage())
+    }, 2000);
+  };
+
+  const handleFile = (e) => {
+    const image = e.target.files[0];
+
+    setImage(image);
+  }; 
 
   if (loading) {
     return <p>Carregando...</p>
-  }
+  };
 
   return (
     <div id="profile">
@@ -62,21 +90,24 @@ const Profile = () => {
             <form onSubmit={handleSubmit}>
               <label>
                 <span>Título da foto:</span>
-                <input type="text" name="title" placeholder='Insira um título' />
+                <input type="text" name="title" placeholder='Insira um título' value={title || ""} onChange={(e) => setTitle(e.target.value)}/>
               </label>
 
               <label>
                 <span>Imagem:</span>
-                <input type="file" />
+                <input type="file" onChange={handleFile}/>
               </label>
 
-              <input type="submit" value="Postar" />
+              {!loadingPhoto && <input type="submit" value="Enviar" />}
+              {loadingPhoto && <input type="submit" value="Aguarde..." disabled />}
+              {errorPhoto && <Message msg={errorPhoto} type="error"/> }
+              {messagePhoto && <Message msg={messagePhoto} type="success"/> }
             </form>
           </div>
         </>
       )}
     </div>
   )
-}
+};
 
 export default Profile

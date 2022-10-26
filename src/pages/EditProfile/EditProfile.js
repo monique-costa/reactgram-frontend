@@ -41,7 +41,7 @@ const EditProfile = () => {
 
         setPreviewImage(image);
         setProfileImage(image);
-    }
+    };
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -73,7 +73,7 @@ const EditProfile = () => {
         setTimeout(() => {
             dispatch(resetMessage())
         }, 2000);
-    }
+    };
 
   return (
     <div id="edit-profile">
@@ -115,6 +115,6 @@ const EditProfile = () => {
         </form>
     </div>
   )
-}
+};
 
 export default EditProfile
